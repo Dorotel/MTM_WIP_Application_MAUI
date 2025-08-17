@@ -1,63 +1,61 @@
 using MTM_WIP_Application_MAUI.Models;
+using MTM_WIP_Application_MAUI.Services;
 using System.Collections.ObjectModel;
 
 namespace MTM_WIP_Application_MAUI.Pages
 {
     public partial class InventoryListPage : ContentPage
     {
+        private readonly IInventoryService _inventoryService;
         public ObservableCollection<CurrentInventory> Inventory { get; set; }
 
         public InventoryListPage()
         {
             InitializeComponent();
+            _inventoryService = ServiceHelper.GetService<IInventoryService>();
             Inventory = new ObservableCollection<CurrentInventory>();
-            LoadSampleData();
             InventoryCollectionView.ItemsSource = Inventory;
+            LoadInventoryData();
         }
 
-        private void LoadSampleData()
+        private async void LoadInventoryData()
         {
-            // TODO: Replace with actual database/storage loading
-            Inventory.Add(new CurrentInventory
+            try
             {
-                Id = 1,
-                ItemNumber = "MTM-001",
-                Location = "A1-B2",
-                Op = "OP10",
-                Quantity = 50,
-                Notes = "Quality checked",
-                User = "ADMIN",
-                DateTime = DateTime.Now.AddHours(-2)
-            });
-
-            Inventory.Add(new CurrentInventory
+                var inventory = await _inventoryService.GetInventoryAsync();
+                Inventory.Clear();
+                foreach (var item in inventory)
+                {
+                    Inventory.Add(item);
+                }
+            }
+            catch (Exception ex)
             {
-                Id = 2,
-                ItemNumber = "MTM-002",
-                Location = "B3-C4",
-                Op = "OP20",
-                Quantity = 25,
-                Notes = "Pending inspection",
-                User = "USER1",
-                DateTime = DateTime.Now.AddHours(-1)
-            });
-
-            Inventory.Add(new CurrentInventory
-            {
-                Id = 3,
-                ItemNumber = "MTM-003",
-                Location = "C5-D6",
-                Op = "OP30",
-                Quantity = 75,
-                Notes = "Ready for shipment",
-                User = "USER2",
-                DateTime = DateTime.Now.AddMinutes(-30)
-            });
+                await DisplayAlert("Error", $"Failed to load inventory: {ex.Message}", "OK");
+            }
         }
 
         private async void OnBackToMainClicked(object? sender, EventArgs e)
         {
             await Navigation.PopAsync();
         }
+    }
+
+    // Helper class for dependency injection in pages
+    public static class ServiceHelper
+    {
+        public static TService GetService<TService>()
+            => Current.GetService<TService>();
+
+        public static IServiceProvider Current =>
+#if WINDOWS10_0_17763_0_OR_GREATER
+            MauiWinUIApplication.Current.Services;
+#elif ANDROID
+            MauiApplication.Current.Services;
+#elif IOS || MACCATALYST
+            MauiUIApplicationDelegate.Current.Services;
+#else
+            null;
+#endif
     }
 }

@@ -1,12 +1,17 @@
 using MTM_WIP_Application_MAUI.Models;
+using MTM_WIP_Application_MAUI.Services;
+using MTM_WIP_Application_MAUI.Pages;
 
 namespace MTM_WIP_Application_MAUI
 {
     public partial class MainPage : ContentPage
     {
+        private readonly IInventoryService _inventoryService;
+
         public MainPage()
         {
             InitializeComponent();
+            _inventoryService = ServiceHelper.GetService<IInventoryService>();
             InitializeUserInterface();
         }
 
@@ -36,11 +41,18 @@ namespace MTM_WIP_Application_MAUI
                     DateTime = DateTime.Now
                 };
 
-                // TODO: Add to database/storage
-                StatusLabel.Text = $"Added {inventory.Quantity} of {inventory.ItemNumber} to {inventory.Location}";
-                ClearInputs();
-                
-                await DisplayAlert("Success", $"Successfully added {inventory.Quantity} units of {inventory.ItemNumber}", "OK");
+                var success = await _inventoryService.AddInventoryAsync(inventory);
+                if (success)
+                {
+                    StatusLabel.Text = $"Added {inventory.Quantity} of {inventory.ItemNumber} to {inventory.Location}";
+                    ClearInputs();
+                    await DisplayAlert("Success", $"Successfully added {inventory.Quantity} units of {inventory.ItemNumber}", "OK");
+                }
+                else
+                {
+                    StatusLabel.Text = "Error: Failed to add inventory";
+                    await DisplayAlert("Error", "Failed to add inventory to database", "OK");
+                }
             }
             catch (Exception ex)
             {
@@ -60,11 +72,18 @@ namespace MTM_WIP_Application_MAUI
                 var partId = PartIdEntry.Text?.Trim() ?? string.Empty;
                 var location = LocationEntry.Text?.Trim() ?? string.Empty;
 
-                // TODO: Remove from database/storage
-                StatusLabel.Text = $"Removed {quantity} of {partId} from {location}";
-                ClearInputs();
-                
-                await DisplayAlert("Success", $"Successfully removed {quantity} units of {partId}", "OK");
+                var success = await _inventoryService.RemoveInventoryAsync(partId, location, quantity);
+                if (success)
+                {
+                    StatusLabel.Text = $"Removed {quantity} of {partId} from {location}";
+                    ClearInputs();
+                    await DisplayAlert("Success", $"Successfully removed {quantity} units of {partId}", "OK");
+                }
+                else
+                {
+                    StatusLabel.Text = "Error: Insufficient inventory or item not found";
+                    await DisplayAlert("Error", "Insufficient inventory or item not found", "OK");
+                }
             }
             catch (Exception ex)
             {
@@ -81,7 +100,7 @@ namespace MTM_WIP_Application_MAUI
 
         private async void OnViewInventoryClicked(object? sender, EventArgs e)
         {
-            await Navigation.PushAsync(new Pages.InventoryListPage());
+            await Navigation.PushAsync(new InventoryListPage());
         }
 
         private bool ValidateInput()

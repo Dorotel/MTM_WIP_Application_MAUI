@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using MTM_WIP_Application_MAUI.Services;
 
 namespace MTM_WIP_Application_MAUI
 {
@@ -14,6 +15,9 @@ namespace MTM_WIP_Application_MAUI
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
+
+            // Register services
+            builder.Services.AddSingleton<IInventoryService, MockInventoryService>();
 
 #if DEBUG
     		builder.Logging.AddDebug();
