@@ -21,10 +21,10 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>MTM_WIP_Application_MAUI</ApplicationTitle>
+		<ApplicationTitle>MTM WIP Inventory</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.mtm_wip_application_maui</ApplicationId>
+		<ApplicationId>com.mtm.wip.inventory</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MTM_WIP_Application_MAUI.Pages.InventoryListPage"
+             Title="Current Inventory">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        
+        <!-- Header -->
+        <StackLayout Grid.Row="0" Padding="20,10">
+            <Label Text="Current Inventory" 
+                   Style="{StaticResource Headline}"
+                   HorizontalOptions="Center" />
+        </StackLayout>
+
+        <!-- Inventory List -->
+        <CollectionView Grid.Row="1" 
+                        x:Name="InventoryCollectionView"
+                        Margin="10">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="10" RowDefinitions="Auto,Auto,Auto">
+                        <Frame Grid.Row="0" BackgroundColor="LightBlue" Padding="10" CornerRadius="5">
+                            <StackLayout>
+                                <Label Text="{Binding ItemNumber}" FontAttributes="Bold" FontSize="16" />
+                                <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                    <Label Grid.Column="0" Text="{Binding Location, StringFormat='Location: {0}'}" />
+                                    <Label Grid.Column="1" Text="{Binding Quantity, StringFormat='Qty: {0}'}" />
+                                </Grid>
+                                <Label Text="{Binding Op, StringFormat='Operation: {0}'}" />
+                                <Label Text="{Binding Notes}" FontStyle="Italic" />
+                                <Label Text="{Binding DateTime, StringFormat='Updated: {0:MM/dd/yyyy HH:mm}'}" FontSize="12" />
+                            </StackLayout>
+                        </Frame>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Footer -->
+        <StackLayout Grid.Row="2" Padding="20,10">
+            <Button Text="Back to Main"
+                    BackgroundColor="Blue"
+                    TextColor="White"
+                    Clicked="OnBackToMainClicked" />
+        </StackLayout>
+
+    </Grid>
+
+</ContentPage>
