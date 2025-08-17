@@ -1,4 +1,5 @@
 using MTM_MAUI_Application.Models;
+using ModelLocation = MTM_MAUI_Application.Models.Location;
 
 namespace MTM_MAUI_Application.Services;
 
@@ -31,10 +32,10 @@ public interface IPartService
 /// </summary>
 public interface ILocationService
 {
-    Task<List<Location>> GetAllLocationsAsync();
-    Task<Location?> GetLocationByNameAsync(string name);
-    Task<bool> AddLocationAsync(Location location);
-    Task<bool> UpdateLocationAsync(Location location);
+    Task<List<ModelLocation>> GetAllLocationsAsync();
+    Task<MTM_MAUI_Application.Models.Location?> GetLocationByNameAsync(string name);
+    Task<bool> AddLocationAsync(ModelLocation location);
+    Task<bool> UpdateLocationAsync(ModelLocation location);
     Task<bool> DeleteLocationAsync(int locationId);
 }
 
@@ -84,4 +85,29 @@ public interface IConnectionService
     event EventHandler<bool> ConnectionStatusChanged;
     Task StartMonitoringAsync();
     Task StopMonitoringAsync();
+}
+
+/// <summary>
+/// Interface for inventory operations
+/// </summary>
+public interface IInventoryService
+{
+    Task<List<InventoryItem>> GetInventoryByPartIdAsync(string partId);
+    Task<List<InventoryItem>> GetInventoryByPartIdAndOperationAsync(string partId, string operation);
+    Task<bool> AddInventoryItemAsync(InventoryItem item);
+    Task<bool> RemoveInventoryItemAsync(int inventoryId, int quantity, string user, string notes = "");
+    Task<bool> TransferInventoryAsync(int inventoryId, string toLocation, int quantity, string user, string notes = "");
+    Task<List<InventoryItem>> SearchInventoryAsync(string searchTerm);
+}
+
+/// <summary>
+/// Interface for error handling services
+/// </summary>
+public interface IErrorHandlerService
+{
+    Task HandleExceptionAsync(Exception exception, string context = "");
+    Task ShowErrorAsync(string title, string message);
+    Task ShowWarningAsync(string title, string message);
+    Task ShowInfoAsync(string title, string message);
+    Task<bool> ShowConfirmationAsync(string title, string message);
 }

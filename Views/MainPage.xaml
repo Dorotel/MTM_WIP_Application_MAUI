@@ -20,12 +20,12 @@
             <Label Text="Cross-platform inventory management for MTM WIP processes"
                    Style="{DynamicResource SubtitleLabel}"
                    SemanticProperties.HeadingLevel="Level2"
-                   SemanticProperties.Description="Welcome to dot net Multi platform App U I" />
+                   SemanticProperties.Description="Welcome to the MTM WIP Application" />
 
-            <Button x:Name="CounterBtn"
+            <Button x:Name="GetStartedBtn"
                     Text="Get Started"
                     SemanticProperties.Hint="Navigate to inventory management"
-                    Clicked="OnCounterClicked"
+                    Clicked="OnGetStartedClicked"
                     HorizontalOptions="Fill" />
 
         </VerticalStackLayout>
